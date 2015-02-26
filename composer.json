@@ -28,11 +28,6 @@
       "RemoteServerBundle": ""
     }
   },
-  "extra": {
-    "branch-alias": {
-      "dev-master": "1.0.x-dev"
-    }
-  },
   "target-dir": "acassan/RemoteServerBundle",
   "config": {
     "bin-dir": "bin"
