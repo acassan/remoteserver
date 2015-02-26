@@ -28,7 +28,7 @@
       "RemoteServerBundle": ""
     }
   },
-  "target-dir": "acassan/RemoteServerBundle",
+  "target-dir": "",
   "config": {
     "bin-dir": "bin"
   }
