@@ -24,8 +24,8 @@
   },
 
   "autoload": {
-    "psr-0": {
-      "RemoteServerBundle": ""
+    "psr-4": {
+      "RemoteServerBundle\\": ""
     }
   },
   "target-dir": "",
