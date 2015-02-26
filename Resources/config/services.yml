@@ -1,0 +1,3 @@
+services:
+    remoteserver:
+      class: RemoteServer\Factory
