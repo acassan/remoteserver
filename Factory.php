@@ -5,6 +5,7 @@ namespace RemoteServerBundle;
 use RemoteServerBundle\Server\Ftp;
 use RemoteServerBundle\Server\ServerInterface;
 use RemoteServerBundle\Server\Sftp;
+use RemoteServerBundle\Server\XmlRpc;
 
 /**
  * Class Factory
@@ -20,14 +21,16 @@ Class Factory
     public function createFromDsn($dsn)
     {
         if(strstr($dsn, 'sftp')) {
-            $rserver = new Sftp($dsn);
+            $rserver = new Sftp();
         }
         elseif(strstr($dsn, 'ftp')) {
-            $rserver = new Ftp($dsn);
+            $rserver = new Ftp();
         }
         else {
             throw new \Exception("[RemoteServerFactory] Can not create remote server from dsn: '{$dsn}'");
         }
+
+        $rserver->buildFromDsn($dsn);
 
         return $rserver;
     }
@@ -42,15 +45,27 @@ Class Factory
     {
         switch($protocol) {
             case 'sftp':
-                $rserver = new Sftp(array_merge(['protocol' => $protocol, $option]));
+                $rserver = new Sftp();
                 break;
             case 'ftp':
-                $rserver = new Ftp(array_merge(['protocol' => $protocol, $option]));
+                $rserver = new Ftp();
+                break;
+            case 'xmlrpc':
+                $rserver = new XmlRpc();
                 break;
             default:
                 throw new \Exception("[RemoteServerFactory] Can not create remote server for protocol: '{$protocol}'");
         }
 
+        $rserver->buildFromParameters($protocol, $option);
+
         return $rserver;
+    }
+
+    public function createRemoteServer($protocol)
+    {
+        switch($protocol) {
+            case 'xmlrpc':
+        }
     }
 }

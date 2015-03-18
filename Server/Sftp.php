@@ -6,12 +6,12 @@ namespace RemoteServerBundle\Server;
  * Class Sftp
  * @package RemoteServerBundle\Server
  */
-Final Class Sftp extends BaseFtp implements ServerInterface
+Final Class Sftp extends BaseFtp
 {
     /**
      * @inheritdoc
      */
-    protected function connect()
+    public function connect()
     {
         $dsnHostHandled = explode(':', $this->getFtpHost());       // Array[host,port]
 

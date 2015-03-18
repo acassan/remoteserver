@@ -6,12 +6,12 @@ namespace RemoteServerBundle\Server;
  * Class Ftp
  * @package RemoteServerBundle\Server
  */
-Final Class Ftp extends BaseFtp implements ServerInterface
+Final Class Ftp extends BaseFtp
 {
     /**
      * @throws \Exception
      */
-    protected function connect()
+    public function connect()
     {
         $this->setFtp(ftp_connect($this->getFtpHost()));
 
@@ -32,6 +32,26 @@ Final Class Ftp extends BaseFtp implements ServerInterface
         }
 
         return true;
+    }
+
+    /**
+     * @param $localFile
+     * @param $remoteFile
+     * @param int $mode
+     * @return bool
+     */
+    public function getAsynchronously($localFile, $remoteFile, $mode = FTP_ASCII)
+    {
+        $localFilRes = fopen($localFile, 'w');
+        return ftp_nb_fget($this->getFtp(), $localFilRes, $remoteFile, $mode);
+    }
+
+    /**
+     * @return int
+     */
+    public function AsynchronouslyContinue()
+    {
+        return ftp_nb_continue($this->getFtp());
     }
 
     /**
@@ -156,5 +176,19 @@ Final Class Ftp extends BaseFtp implements ServerInterface
         }
 
         return $fileMdtm;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFileSize($filepath)
+    {
+        $filesize = ftp_size($this->getFtp(), $filepath);
+
+        if($filesize == -1) {
+            throw new \Exception(sprintf("Error when trying to get file size"));
+        }
+
+        return $filesize;
     }
 }

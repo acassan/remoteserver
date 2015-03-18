@@ -6,7 +6,7 @@ namespace RemoteServerBundle\Server;
  * Class BaseFtp
  * @package RemoteServerBundle\Server
  */
-Abstract class BaseFtp
+Abstract class BaseFtp implements FileServerInterface, ServerInterface
 {
     /**
      * FTP Resource
@@ -39,43 +39,31 @@ Abstract class BaseFtp
     private $ftp_dsn;
 
     /**
-     * @return mixed
+     * Constructor
      */
-    abstract protected function connect();
-
-    /**
-     * @param $ftpParamaters
-     * @throws \Exception
-     */
-    public function __construct($ftpParamaters)
+    public function __construct()
     {
-        if(is_string($ftpParamaters)) {
-            $this->processDsnFromString($ftpParamaters);
-        }
-        elseif(is_array($ftpParamaters)) {
-            $this->processDsnFromArray($ftpParamaters);
-        } else {
-            throw new \Exception("[RemoteServerBaseFTP] Unknow construct parameters type");
-        }
+
     }
 
     /**
      * Extract and process dsn
+     * @param $protocol
      * @param array $dsnParameters
      * @return bool
      * @throws \Exception
      */
-    public function processDsnFromArray(array $dsnParameters)
+    public function buildFromParameters($protocol, array $dsnParameters)
     {
         if(!isset($dsnParameters['user'])) {
             throw new \Exception("[RemoteServerBaseFTP] Missing 'user' parameters");
         }
 
-        if(!isset($dsnParameters['user'])) {
+        if(!isset($dsnParameters['password'])) {
             throw new \Exception("[RemoteServerBaseFTP] Missing 'password' parameters");
         }
 
-        if(!isset($dsnParameters['user'])) {
+        if(!isset($dsnParameters['host'])) {
             throw new \Exception("[RemoteServerBaseFTP] Missing 'host' parameters");
         }
 
@@ -90,7 +78,7 @@ Abstract class BaseFtp
             ->setFtpDir($dsnParameters['directory']);
 
         $dsn = sprintf("%s://%s:%s@%s%s",
-            $dsnParameters['protocol'],
+            $protocol,
             $dsnParameters['user'],
             $dsnParameters['password'],
             $dsnParameters['host'],
@@ -108,7 +96,7 @@ Abstract class BaseFtp
      * @return bool
      * @throws \Exception
      */
-    public function processDsnFromString($dsn)
+    public function buildFromDsn($dsn)
     {
         preg_match("#s?ftp://(.+):(.+)@([^/]+)(/(.*))?#", $dsn, $dsnExtract);
 
@@ -285,6 +273,14 @@ Abstract class BaseFtp
      * @inheritdoc
      */
     public function getFileModificationTime($filepath)
+    {
+        throw new \Exception(sprintf("Function '%s' not implemented in %s class", 'getFileModificationTime()', get_class($this)));
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFileSize($filepath)
     {
         throw new \Exception(sprintf("Function '%s' not implemented in %s class", 'getFileModificationTime()', get_class($this)));
     }
