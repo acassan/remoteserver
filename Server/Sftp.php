@@ -13,18 +13,11 @@ Final Class Sftp extends BaseFtp
      */
     public function connect()
     {
-        $dsnHostHandled = explode(':', $this->getFtpHost());       // Array[host,port]
-
-        if(count($dsnHostHandled) != 2) {
-            throw new \Exception(sprintf("Invalid host for sftp connection %s", $this->getFtpHost()));
-        }
-
-        $this->setFtp(ssh2_connect($dsnHostHandled[0], $dsnHostHandled[1]));
-
+        $this->setFtp(ssh2_connect($this->getFtpHost(), $this->getFtpPort()));
         $result = ssh2_auth_password($this->getFtp(), $this->getFtpUser(), $this->getFtpPassword());
 
         if (false === $result) {
-            throw new \Exception("Can't log in to ".$dsnHostHandled[0]);
+            throw new \Exception("Can't log in to ". $this->getFtpHost());
         }
     }
 

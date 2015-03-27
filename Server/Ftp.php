@@ -13,11 +13,13 @@ Final Class Ftp extends BaseFtp
      */
     public function connect()
     {
-        $this->setFtp(ftp_connect($this->getFtpHost()));
+        $this->setFtp(ftp_connect($this->getFtpHost(), $this->getFtpPort()));
 
         if (true !== ftp_login($this->getFtp(), $this->getFtpUser(), $this->getFtpPassword())) {
             throw new \Exception("Can't log in to ". $this->getFtpHost() ." with user ". $this->getFtpUser());
         }
+
+        ftp_chdir($this->getFtp(), $this->getFtpDir());
 
         $this->setPassiveMode();
     }
@@ -95,7 +97,7 @@ Final Class Ftp extends BaseFtp
     /**
      * @inheritdoc
      */
-    public function getFilesInFolder($filePath)
+    public function getFilesInFolder($filePath = '.')
     {
         $result = ftp_nlist($this->getFtp(), $filePath);
         if(false === $result) {
