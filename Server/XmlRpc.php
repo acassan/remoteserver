@@ -42,6 +42,20 @@ Final Class XmlRpc
     }
 
     /**
+     * @param $workerGroup
+     * @param int $number
+     * @return mixed
+     * @throws \Exception
+     */
+    public function startGroup($workerGroup, $number = 1)
+    {
+        $request    = xmlrpc_encode_request('supervisor.startProcessGroup', [$workerGroup, $number]);
+        $response   = $this->processRequest($request);
+
+        return $response;
+    }
+
+    /**
      * @param $workerName
      * @param int $number
      * @return mixed
@@ -62,6 +76,20 @@ Final Class XmlRpc
     public function startAllProcesses()
     {
         $request    = xmlrpc_encode_request('supervisor.startAllProcesses', [1]);
+        $response   = $this->processRequest($request);
+
+        return $response;
+    }
+
+    /**
+     * @param $workerGroup
+     * @param int $number
+     * @return mixed
+     * @throws \Exception
+     */
+    public function stopGroup($workerGroup, $number = 1)
+    {
+        $request    = xmlrpc_encode_request('supervisor.stopProcessGroup', [$workerGroup, $number]);
         $response   = $this->processRequest($request);
 
         return $response;
@@ -130,11 +158,11 @@ Final Class XmlRpc
     private function processRequest($request)
     {
         $options = [
-            'http'      => [
-                'method'    => 'POST',
-                'header'    => $this->headers,
-                'content'   => $request
-            ]
+        'http'      => [
+        'method'    => 'POST',
+        'header'    => $this->headers,
+        'content'   => $request
+        ]
         ];
 
         $context  = stream_context_create($options);
